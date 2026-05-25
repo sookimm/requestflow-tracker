@@ -70,10 +70,58 @@ const getAuditLogs = (req, res) => {
   res.json(auditLogs);
 };
 
+const startProcessingRequest = (req, res) => {
+  const requestId = parseInt(req.params.id);
+
+  const request = requests.find((r) => r.id === requestId);
+
+  if (!request) {
+    return res.status(404).json({
+      message: "Request not found",
+    });
+  }
+
+  request.status = "IN_PROGRESS";
+
+  auditLogs.push({
+    requestId: request.id,
+    action: "IN_PROGRESS",
+    performedBy: "admin01",
+    timestamp: new Date(),
+  });
+
+  res.json(request);
+};
+
+const completeRequest = (req, res) => {
+  const requestId = parseInt(req.params.id);
+
+  const request = requests.find((r) => r.id === requestId);
+
+  if (!request) {
+    return res.status(404).json({
+      message: "Request not found",
+    });
+  }
+
+  request.status = "COMPLETED";
+
+  auditLogs.push({
+    requestId: request.id,
+    action: "COMPLETED",
+    performedBy: "admin01",
+    timestamp: new Date(),
+  });
+
+  res.json(request);
+};
+
 module.exports = {
   createRequest,
   getAllRequests,
   approveRequest,
   rejectRequest,
   getAuditLogs,
+  startProcessingRequest,
+  completeRequest,
 };
