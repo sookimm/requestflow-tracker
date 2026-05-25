@@ -1,4 +1,5 @@
 const requests = [];
+const auditLogs = [];
 
 const createRequest = (req, res) => {
   const newRequest = {
@@ -32,6 +33,13 @@ const approveRequest = (req, res) => {
 
   request.status = "APPROVED";
 
+  auditLogs.push({
+    requestId: request.id,
+    action: "APPROVED",
+    performedBy: "manager01",
+    timestamp: new Date(),
+  });
+
   res.json(request);
 };
 
@@ -48,7 +56,18 @@ const rejectRequest = (req, res) => {
 
   request.status = "REJECTED";
 
+  auditLogs.push({
+    requestId: request.id,
+    action: "REJECTED",
+    performedBy: "manager01",
+    timestamp: new Date(),
+  });
+
   res.json(request);
+};
+
+const getAuditLogs = (req, res) => {
+  res.json(auditLogs);
 };
 
 module.exports = {
@@ -56,4 +75,5 @@ module.exports = {
   getAllRequests,
   approveRequest,
   rejectRequest,
+  getAuditLogs,
 };

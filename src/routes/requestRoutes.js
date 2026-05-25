@@ -7,6 +7,7 @@ const {
   getAllRequests,
   approveRequest,
   rejectRequest,
+  getAuditLogs,
 } = require("../controllers/requestController");
 
 const { checkManagerRole } = require("../middleware/roleMiddleware");
@@ -14,6 +15,8 @@ const { checkManagerRole } = require("../middleware/roleMiddleware");
 router.post("/", createRequest);
 
 router.get("/", getAllRequests);
+
+router.get("/audit/logs", getAuditLogs);
 
 router.patch("/:id/approve", checkManagerRole, approveRequest);
 
