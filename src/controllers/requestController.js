@@ -1,29 +1,37 @@
-const requests = [];
-const auditLogs = [];
+const { PrismaClient } = require("@prisma/client");
 
-const createRequest = (req, res) => {
-  const newRequest = {
-    id: requests.length + 1,
-    title: req.body.title,
-    description: req.body.description,
-    requestType: req.body.requestType,
-    status: "PENDING",
-    requestedBy: req.body.requestedBy,
-  };
+const prisma = new PrismaClient();
 
-  requests.push(newRequest);
+const createRequest = async (req, res) => {
+  const newRequest = await prisma.request.create({
+    data: {
+      title: req.body.title,
+      description: req.body.description,
+      requestType: req.body.requestType,
+      status: "PENDING",
+      requestedBy: req.body.requestedBy,
+    },
+  });
 
   res.status(201).json(newRequest);
 };
 
-const getAllRequests = (req, res) => {
+const getAllRequests = async (req, res) => {
+  const requests = await prisma.request.findMany({
+    orderBy: {
+      id: "desc",
+    },
+  });
+
   res.json(requests);
 };
 
-const approveRequest = (req, res) => {
+const approveRequest = async (req, res) => {
   const requestId = parseInt(req.params.id);
 
-  const request = requests.find((r) => r.id === requestId);
+  const request = await prisma.request.findUnique({
+    where: { id: requestId },
+  });
 
   if (!request) {
     return res.status(404).json({
@@ -31,22 +39,28 @@ const approveRequest = (req, res) => {
     });
   }
 
-  request.status = "APPROVED";
-
-  auditLogs.push({
-    requestId: request.id,
-    action: "APPROVED",
-    performedBy: "manager01",
-    timestamp: new Date(),
+  const updatedRequest = await prisma.request.update({
+    where: { id: requestId },
+    data: { status: "APPROVED" },
   });
 
-  res.json(request);
+  await prisma.auditLog.create({
+    data: {
+      requestId: requestId,
+      action: "APPROVED",
+      performedBy: "manager01",
+    },
+  });
+
+  res.json(updatedRequest);
 };
 
-const rejectRequest = (req, res) => {
+const rejectRequest = async (req, res) => {
   const requestId = parseInt(req.params.id);
 
-  const request = requests.find((r) => r.id === requestId);
+  const request = await prisma.request.findUnique({
+    where: { id: requestId },
+  });
 
   if (!request) {
     return res.status(404).json({
@@ -54,66 +68,88 @@ const rejectRequest = (req, res) => {
     });
   }
 
-  request.status = "REJECTED";
-
-  auditLogs.push({
-    requestId: request.id,
-    action: "REJECTED",
-    performedBy: "manager01",
-    timestamp: new Date(),
+  const updatedRequest = await prisma.request.update({
+    where: { id: requestId },
+    data: { status: "REJECTED" },
   });
 
-  res.json(request);
+  await prisma.auditLog.create({
+    data: {
+      requestId: requestId,
+      action: "REJECTED",
+      performedBy: "manager01",
+    },
+  });
+
+  res.json(updatedRequest);
 };
 
-const getAuditLogs = (req, res) => {
+const startProcessingRequest = async (req, res) => {
+  const requestId = parseInt(req.params.id);
+
+  const request = await prisma.request.findUnique({
+    where: { id: requestId },
+  });
+
+  if (!request) {
+    return res.status(404).json({
+      message: "Request not found",
+    });
+  }
+
+  const updatedRequest = await prisma.request.update({
+    where: { id: requestId },
+    data: { status: "IN_PROGRESS" },
+  });
+
+  await prisma.auditLog.create({
+    data: {
+      requestId: requestId,
+      action: "IN_PROGRESS",
+      performedBy: "admin01",
+    },
+  });
+
+  res.json(updatedRequest);
+};
+
+const completeRequest = async (req, res) => {
+  const requestId = parseInt(req.params.id);
+
+  const request = await prisma.request.findUnique({
+    where: { id: requestId },
+  });
+
+  if (!request) {
+    return res.status(404).json({
+      message: "Request not found",
+    });
+  }
+
+  const updatedRequest = await prisma.request.update({
+    where: { id: requestId },
+    data: { status: "COMPLETED" },
+  });
+
+  await prisma.auditLog.create({
+    data: {
+      requestId: requestId,
+      action: "COMPLETED",
+      performedBy: "admin01",
+    },
+  });
+
+  res.json(updatedRequest);
+};
+
+const getAuditLogs = async (req, res) => {
+  const auditLogs = await prisma.auditLog.findMany({
+    orderBy: {
+      id: "desc",
+    },
+  });
+
   res.json(auditLogs);
-};
-
-const startProcessingRequest = (req, res) => {
-  const requestId = parseInt(req.params.id);
-
-  const request = requests.find((r) => r.id === requestId);
-
-  if (!request) {
-    return res.status(404).json({
-      message: "Request not found",
-    });
-  }
-
-  request.status = "IN_PROGRESS";
-
-  auditLogs.push({
-    requestId: request.id,
-    action: "IN_PROGRESS",
-    performedBy: "admin01",
-    timestamp: new Date(),
-  });
-
-  res.json(request);
-};
-
-const completeRequest = (req, res) => {
-  const requestId = parseInt(req.params.id);
-
-  const request = requests.find((r) => r.id === requestId);
-
-  if (!request) {
-    return res.status(404).json({
-      message: "Request not found",
-    });
-  }
-
-  request.status = "COMPLETED";
-
-  auditLogs.push({
-    requestId: request.id,
-    action: "COMPLETED",
-    performedBy: "admin01",
-    timestamp: new Date(),
-  });
-
-  res.json(request);
 };
 
 module.exports = {
