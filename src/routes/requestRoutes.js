@@ -9,12 +9,14 @@ const {
   rejectRequest,
 } = require("../controllers/requestController");
 
+const { checkManagerRole } = require("../middleware/roleMiddleware");
+
 router.post("/", createRequest);
 
 router.get("/", getAllRequests);
 
-router.patch("/:id/approve", approveRequest);
+router.patch("/:id/approve", checkManagerRole, approveRequest);
 
-router.patch("/:id/reject", rejectRequest);
+router.patch("/:id/reject", checkManagerRole, rejectRequest);
 
 module.exports = router;
