@@ -5,6 +5,9 @@ function App() {
   const [requests, setRequests] = useState([]);
   const [auditLogs, setAuditLogs] = useState([]);
 
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("ALL");
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [requestType, setRequestType] = useState("GITHUB_ACCESS");
@@ -125,6 +128,21 @@ function App() {
     (request) => request.status === "COMPLETED",
   ).length;
 
+  const rejectedRequests = requests.filter(
+    (request) => request.status === "REJECTED",
+  ).length;
+
+  const filteredRequests = requests.filter((request) => {
+    const matchesSearch = request.title
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+
+    const matchesStatus =
+      statusFilter === "ALL" || request.status === statusFilter;
+
+    return matchesSearch && matchesStatus;
+  });
+
   return (
     <div className="app-container">
       <h1 className="page-title">RequestFlow Tracker</h1>
@@ -148,6 +166,36 @@ function App() {
         <div className="metric-card">
           <h3>Completed</h3>
           <p>{completedRequests}</p>
+        </div>
+
+        <div className="metric-card">
+          <h3>Rejected</h3>
+          <p>{rejectedRequests}</p>
+        </div>
+      </div>
+
+      <div className="section-card">
+        <h2 className="section-title">Search & Filter</h2>
+
+        <div className="form-row">
+          <input
+            type="text"
+            placeholder="Search requests..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+          >
+            <option value="ALL">All Statuses</option>
+            <option value="PENDING">Pending</option>
+            <option value="APPROVED">Approved</option>
+            <option value="IN_PROGRESS">In Progress</option>
+            <option value="COMPLETED">Completed</option>
+            <option value="REJECTED">Rejected</option>
+          </select>
         </div>
       </div>
 
@@ -212,7 +260,7 @@ function App() {
           </thead>
 
           <tbody>
-            {requests.map((request) => (
+            {filteredRequests.map((request) => (
               <tr key={request.id}>
                 <td>{request.id}</td>
                 <td>{request.title}</td>
