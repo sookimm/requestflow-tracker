@@ -13,7 +13,17 @@ const createRequest = async (req, res) => {
     },
   });
 
-  res.status(201).json(newRequest);
+  const approvalEmail = {
+    to: "manager@example.com",
+    subject: `Approval Required: ${newRequest.title}`,
+    approveLink: `http://localhost:3000/requests/${newRequest.id}/approve-link`,
+    rejectLink: `http://localhost:3000/requests/${newRequest.id}/reject-link`,
+  };
+
+  res.status(201).json({
+    request: newRequest,
+    approvalEmail,
+  });
 };
 
 const getAllRequests = async (req, res) => {
@@ -142,6 +152,70 @@ const completeRequest = async (req, res) => {
   res.json(updatedRequest);
 };
 
+const approveFromLink = async (req, res) => {
+  const requestId = parseInt(req.params.id);
+
+  const request = await prisma.request.findUnique({
+    where: { id: requestId },
+  });
+
+  if (!request) {
+    return res.status(404).json({
+      message: "Request not found",
+    });
+  }
+
+  const updatedRequest = await prisma.request.update({
+    where: { id: requestId },
+    data: { status: "APPROVED" },
+  });
+
+  await prisma.auditLog.create({
+    data: {
+      requestId,
+      action: "APPROVED_FROM_LINK",
+      performedBy: "manager01",
+    },
+  });
+
+  res.json({
+    message: "Request approved successfully",
+    request: updatedRequest,
+  });
+};
+
+const rejectFromLink = async (req, res) => {
+  const requestId = parseInt(req.params.id);
+
+  const request = await prisma.request.findUnique({
+    where: { id: requestId },
+  });
+
+  if (!request) {
+    return res.status(404).json({
+      message: "Request not found",
+    });
+  }
+
+  const updatedRequest = await prisma.request.update({
+    where: { id: requestId },
+    data: { status: "REJECTED" },
+  });
+
+  await prisma.auditLog.create({
+    data: {
+      requestId,
+      action: "REJECTED_FROM_LINK",
+      performedBy: "manager01",
+    },
+  });
+
+  res.json({
+    message: "Request rejected successfully",
+    request: updatedRequest,
+  });
+};
+
 const getAuditLogs = async (req, res) => {
   const auditLogs = await prisma.auditLog.findMany({
     orderBy: {
@@ -160,4 +234,6 @@ module.exports = {
   getAuditLogs,
   startProcessingRequest,
   completeRequest,
+  approveFromLink,
+  rejectFromLink,
 };

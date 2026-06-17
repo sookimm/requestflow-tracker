@@ -10,6 +10,8 @@ const {
   getAuditLogs,
   startProcessingRequest,
   completeRequest,
+  approveFromLink,
+  rejectFromLink,
 } = require("../controllers/requestController");
 
 const { checkManagerRole } = require("../middleware/roleMiddleware");
@@ -27,5 +29,9 @@ router.patch("/:id/reject", checkManagerRole, rejectRequest);
 router.patch("/:id/start-processing", startProcessingRequest);
 
 router.patch("/:id/complete", completeRequest);
+
+router.get("/:id/approve-link", approveFromLink);
+
+router.get("/:id/reject-link", rejectFromLink);
 
 module.exports = router;
