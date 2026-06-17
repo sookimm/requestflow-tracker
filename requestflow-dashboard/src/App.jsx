@@ -93,9 +93,45 @@ function App() {
     fetchAuditLogs();
   }, []);
 
+  const totalRequests = requests.length;
+
+  const pendingRequests = requests.filter(
+    (request) => request.status === "PENDING",
+  ).length;
+
+  const approvedRequests = requests.filter(
+    (request) => request.status === "APPROVED",
+  ).length;
+
+  const completedRequests = requests.filter(
+    (request) => request.status === "COMPLETED",
+  ).length;
+
   return (
     <div className="app-container">
       <h1 className="page-title">RequestFlow Tracker</h1>
+
+      <div className="metrics-grid">
+        <div className="metric-card">
+          <h3>Total Requests</h3>
+          <p>{totalRequests}</p>
+        </div>
+
+        <div className="metric-card">
+          <h3>Pending</h3>
+          <p>{pendingRequests}</p>
+        </div>
+
+        <div className="metric-card">
+          <h3>Approved</h3>
+          <p>{approvedRequests}</p>
+        </div>
+
+        <div className="metric-card">
+          <h3>Completed</h3>
+          <p>{completedRequests}</p>
+        </div>
+      </div>
 
       <div className="section-card">
         <h2 className="section-title">Create New Request</h2>
