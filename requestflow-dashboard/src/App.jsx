@@ -73,6 +73,24 @@ function App() {
     fetchAuditLogs();
   };
 
+  const startProcessingRequest = async (id) => {
+    await fetch(`http://localhost:3000/requests/${id}/start-processing`, {
+      method: "PATCH",
+    });
+
+    fetchRequests();
+    fetchAuditLogs();
+  };
+
+  const completeRequest = async (id) => {
+    await fetch(`http://localhost:3000/requests/${id}/complete`, {
+      method: "PATCH",
+    });
+
+    fetchRequests();
+    fetchAuditLogs();
+  };
+
   const getStatusClass = (status) => {
     switch (status) {
       case "APPROVED":
@@ -207,7 +225,7 @@ function App() {
                 </td>
                 <td>{request.requestedBy}</td>
                 <td>
-                  {request.status === "PENDING" ? (
+                  {request.status === "PENDING" && (
                     <>
                       <button
                         className="action-button approve-button"
@@ -223,7 +241,28 @@ function App() {
                         Reject
                       </button>
                     </>
-                  ) : (
+                  )}
+
+                  {request.status === "APPROVED" && (
+                    <button
+                      className="action-button approve-button"
+                      onClick={() => startProcessingRequest(request.id)}
+                    >
+                      Start Processing
+                    </button>
+                  )}
+
+                  {request.status === "IN_PROGRESS" && (
+                    <button
+                      className="action-button approve-button"
+                      onClick={() => completeRequest(request.id)}
+                    >
+                      Complete
+                    </button>
+                  )}
+
+                  {(request.status === "COMPLETED" ||
+                    request.status === "REJECTED") && (
                     <span className="no-action">—</span>
                   )}
                 </td>
