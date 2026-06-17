@@ -1,0 +1,145 @@
+body {
+  margin: 0;
+  background-color: #111827;
+  color: white;
+  font-family: Inter, sans-serif;
+}
+
+.app-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px;
+}
+
+.page-title {
+  text-align: center;
+  margin-bottom: 40px;
+  font-size: 48px;
+  color: white;
+}
+
+.section-card {
+  background-color: #1f2937;
+  padding: 24px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+}
+
+.section-title {
+  margin-bottom: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  background-color: #374151;
+  padding: 12px;
+}
+
+td {
+  padding: 12px;
+  border-top: 1px solid #4b5563;
+}
+
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: bold;
+}
+
+.status-approved {
+  background-color: #065f46;
+  color: #6ee7b7;
+}
+
+.status-rejected {
+  background-color: #7f1d1d;
+  color: #fca5a5;
+}
+
+.status-pending {
+  background-color: #374151;
+  color: #d1d5db;
+}
+
+.status-progress {
+  background-color: #78350f;
+  color: #fcd34d;
+}
+
+.status-completed {
+  background-color: #1e3a8a;
+  color: #93c5fd;
+}
+
+.action-button {
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: white;
+  font-weight: 600;
+}
+
+.approve-button {
+  background-color: #16a34a;
+}
+
+.reject-button {
+  background-color: #dc2626;
+  margin-left: 8px;
+}
+
+.action-button:hover {
+  opacity: 0.9;
+}
+
+.request-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+}
+
+.request-form input,
+.request-form select,
+.request-form textarea {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #4b5563;
+  background-color: #111827;
+  color: white;
+  font-size: 14px;
+}
+
+.request-form textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+.submit-button {
+  width: fit-content;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.submit-button:hover {
+  background-color: #1d4ed8;
+}
+
+.no-action {
+  color: #9ca3af;
+}
