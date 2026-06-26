@@ -171,10 +171,18 @@ const approveFromLink = async (req, res) => {
     },
   });
 
-  res.json({
-    message: "Request approved successfully",
-    request: updatedRequest,
-  });
+  res.send(`
+  <html>
+    <body style="font-family: Arial, sans-serif; background:#f3f4f6; padding:40px;">
+      <div style="max-width:600px; margin:0 auto; background:white; padding:32px; border-radius:12px; text-align:center;">
+        <h1 style="color:#16a34a;">Request Approved</h1>
+        <h2>${updatedRequest.title}</h2>
+        <p>This request has been approved successfully.</p>
+        <p style="color:#6b7280;">You may now close this page.</p>
+      </div>
+    </body>
+  </html>
+`);
 };
 
 const rejectFromLink = async (req, res) => {
@@ -203,10 +211,18 @@ const rejectFromLink = async (req, res) => {
     },
   });
 
-  res.json({
-    message: "Request rejected successfully",
-    request: updatedRequest,
-  });
+  res.send(`
+  <html>
+    <body style="font-family: Arial, sans-serif; background:#f3f4f6; padding:40px;">
+      <div style="max-width:600px; margin:0 auto; background:white; padding:32px; border-radius:12px; text-align:center;">
+        <h1 style="color:#dc2626;">Request Rejected</h1>
+        <h2>${updatedRequest.title}</h2>
+        <p>This request has been rejected.</p>
+        <p style="color:#6b7280;">You may now close this page.</p>
+      </div>
+    </body>
+  </html>
+`);
 };
 
 const getAuditLogs = async (req, res) => {
