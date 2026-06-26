@@ -4,6 +4,14 @@ Enterprise-style internal request management system built with **React, Express,
 
 Inspired by a real enterprise workflow discussed during my internship at **RBC Capital Markets**, this project simulates how internal access requests move through an approval process from submission to completion.
 
+This project demonstrates how enterprise request workflows can be designed and implemented using modern full-stack technologies.
+
+![React](https://img.shields.io/badge/React-61DAFB?logo=react&logoColor=white)
+![Express](https://img.shields.io/badge/Express-000000?logo=express)
+![Node.js](https://img.shields.io/badge/Node.js-339933?logo=node.js&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?logo=postgresql)
+![Prisma](https://img.shields.io/badge/Prisma-2D3748?logo=prisma)
+
 <img src="assets/dashboard1.png" width="950">
 
 ---
@@ -41,34 +49,14 @@ The objective of this project was **not** to replicate any proprietary banking p
 
 ---
 
-## Enterprise Approval Workflow
+## Enterprise Workflow
 
-The application simulates a multi-stage approval process commonly used in enterprise environments.
+The application models a typical enterprise request lifecycle.
 
-```text
-Employee
-    │
-    ▼
-Submit Request
-    │
-    ▼
-Pending
-    │
-    ▼
-Manager Review
- ┌────┴────┐
- │         │
- ▼         ▼
-Reject   Approve
-            │
-            ▼
-     In Progress
-            │
-            ▼
-       Completed
-```
-
-Each stage updates the request status and automatically records an audit log.
+- Employee submits a request
+- Manager reviews and approves or rejects the request
+- Administrators process approved requests
+- Every state transition is automatically recorded in the audit log
 
 ---
 
@@ -125,15 +113,15 @@ The dashboard provides:
 
 ---
 
-# Screenshots
+# Architecture
 
-## Dashboard Overview
+The following diagram illustrates how requests flow through the application, from the React frontend to the Express API, business logic, PostgreSQL database, audit logging, and email notification service.
 
-<img src="assets/dashboard1.png" width="950">
-
-Displays request metrics, search functionality, filters, and request creation.
+<img src="assets/architecture.png" width="950">
 
 ---
+
+# Screenshots
 
 ## Request Management
 
@@ -173,30 +161,22 @@ After clicking the approval or rejection button, managers receive an immediate c
 
 - React
 - Vite
-- CSS
+- CSS3
 
 ## Backend
 
 - Node.js
-- Express
+- Express.js
 
 ## Database
 
 - PostgreSQL
 - Prisma ORM
 
-## Email
+## Email Service
 
 - Nodemailer
 - Gmail SMTP
-
----
-
-# Architecture
-
-The following diagram illustrates the overall architecture and request workflow of the application.
-
-<img src="assets/architecture.png" width="950">
 
 ---
 
@@ -205,13 +185,14 @@ The following diagram illustrates the overall architecture and request workflow 
 ## Backend
 
 ```bash
+cd requestflow-tracker
 npm install
 npm run dev
 ```
 
 Runs on:
 
-```
+```text
 http://localhost:3000
 ```
 
@@ -220,13 +201,14 @@ http://localhost:3000
 ## Frontend
 
 ```bash
+cd requestflow-dashboard
 npm install
 npm run dev
 ```
 
 Runs on:
 
-```
+```text
 http://localhost:5173
 ```
 
@@ -248,9 +230,7 @@ EMAIL_PASS=your_gmail_app_password
 
 # Future Improvements
 
-There are several enhancements that could further improve the project.
-
-### Authentication & Authorization
+## Authentication & Authorization
 
 - JWT authentication
 - Login system
@@ -259,7 +239,7 @@ There are several enhancements that could further improve the project.
 
 ---
 
-### Enterprise Workflow
+## Enterprise Workflow
 
 - Multiple approval levels
 - Department-based approvals
@@ -269,7 +249,7 @@ There are several enhancements that could further improve the project.
 
 ---
 
-### Request Management
+## Request Management
 
 - Request comments
 - File attachments
@@ -279,7 +259,7 @@ There are several enhancements that could further improve the project.
 
 ---
 
-### Notifications
+## Notifications
 
 - Reminder emails for pending approvals
 - Email notifications for status updates
@@ -287,7 +267,7 @@ There are several enhancements that could further improve the project.
 
 ---
 
-### Dashboard
+## Dashboard
 
 - Pagination
 - Sorting
@@ -297,7 +277,15 @@ There are several enhancements that could further improve the project.
 
 ---
 
-### Deployment
+## Performance
+
+- Database indexing
+- Request caching
+- API response optimization
+
+---
+
+## Deployment
 
 - Docker support
 - CI/CD pipeline
@@ -307,7 +295,7 @@ There are several enhancements that could further improve the project.
 
 ---
 
-### Testing
+## Testing
 
 - Unit testing
 - Integration testing
@@ -331,3 +319,4 @@ Through this project I gained practical experience with:
 - Recording audit logs for traceability
 - Implementing search and filtering features in React
 - Separating business logic using a controller-service architecture
+- Translating a real enterprise software idea into an independent full-stack project
