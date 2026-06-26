@@ -1,4 +1,5 @@
 const { PrismaClient } = require("@prisma/client");
+const { sendApprovalEmail } = require("../services/emailService");
 
 const prisma = new PrismaClient();
 
@@ -13,17 +14,9 @@ const createRequest = async (req, res) => {
     },
   });
 
-  const approvalEmail = {
-    to: "manager@example.com",
-    subject: `Approval Required: ${newRequest.title}`,
-    approveLink: `http://localhost:3000/requests/${newRequest.id}/approve-link`,
-    rejectLink: `http://localhost:3000/requests/${newRequest.id}/reject-link`,
-  };
+  await sendApprovalEmail(newRequest);
 
-  res.status(201).json({
-    request: newRequest,
-    approvalEmail,
-  });
+  res.status(201).json(newRequest);
 };
 
 const getAllRequests = async (req, res) => {
