@@ -109,6 +109,18 @@ function App() {
     }
   };
 
+  const formatRequestType = (type) => {
+    const labels = {
+      GITHUB_ACCESS: "GitHub Access",
+      VPN_ACCESS: "VPN Access",
+      DATABASE_ACCESS: "Database Access",
+      SOFTWARE_INSTALL: "Software Install",
+      LAPTOP_REQUEST: "Laptop Request",
+    };
+
+    return labels[type] || type;
+  };
+
   useEffect(() => {
     fetchRequests();
     fetchAuditLogs();
@@ -254,6 +266,7 @@ function App() {
               <th>ID</th>
               <th>Title</th>
               <th>Status</th>
+              <th>Type</th>
               <th>Requested By</th>
               <th>Actions</th>
             </tr>
@@ -264,6 +277,7 @@ function App() {
               <tr key={request.id}>
                 <td>{request.id}</td>
                 <td>{request.title}</td>
+                <td>{formatRequestType(request.requestType)}</td>
                 <td>
                   <span
                     className={`status-badge ${getStatusClass(request.status)}`}
